@@ -1,2 +1,0 @@
-# XFNPJT
-XFN PJT Portfolio

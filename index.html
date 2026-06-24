@@ -1,0 +1,1591 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>상상인그룹 Winning Rules 내재화 XFN PJT</title>
+  <style>
+    @import url('https://cdn.jsdelivr.net/gh/orioncactus/pretendard/dist/web/variable/pretendardvariable.css');
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    :root {
+      --primary: #005EEB; --primary-hover: #0054D1;
+      --primary-soft: rgba(0,94,235,.07); --primary-border: rgba(0,94,235,.18);
+      --bg-page: #F7F7F8; --bg-card: #FFFFFF; --bg-dark: #171719;
+      --text-main: rgba(46,47,51,.88); --text-sub: rgba(55,56,60,.61);
+      --text-hint: rgba(55,56,60,.28);
+      --line-normal: rgba(112,115,124,.22); --line-weak: rgba(112,115,124,.08);
+      --shadow-em: 0 2px 1.7px -2px rgba(23,23,23,.06), 0 4px 4.3px -1px rgba(23,23,23,.06);
+      --shadow-md: 0 4px 3.5px -2px rgba(23,23,23,.07), 0 10px 10.4px -3px rgba(23,23,23,.07);
+      --teal: #00A7A7; --navy: #1A2B3C;
+      --green: #00BF40; --red: #FF4242;
+      --font: 'Pretendard Variable','Pretendard',-apple-system,'Noto Sans KR',sans-serif;
+    }
+    html { scroll-behavior: smooth; }
+    body { font-family: var(--font); background: var(--bg-page); color: var(--text-main); min-height: 100vh; }
+
+    /* ── STICKY NAV ── */
+    .site-nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(255,255,255,.92); backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--line-weak);
+      box-shadow: 0 1px 8px rgba(23,23,23,.06);
+    }
+    .nav-inner {
+      max-width: 1040px; margin: 0 auto;
+      display: flex; align-items: center; gap: 0;
+      height: 52px; padding: 0 24px;
+    }
+    .nav-brand {
+      font-size: 13px; font-weight: 800; color: var(--bg-dark);
+      letter-spacing: -0.02em; white-space: nowrap; margin-right: 20px;
+      flex-shrink: 0;
+    }
+    .nav-brand span { color: var(--primary); }
+    .nav-links {
+      display: flex; align-items: center; gap: 2px;
+      overflow-x: auto; scrollbar-width: none; flex: 1;
+    }
+    .nav-links::-webkit-scrollbar { display: none; }
+    .nav-link {
+      display: inline-flex; align-items: center;
+      height: 32px; padding: 0 12px; border-radius: 8px;
+      font-size: 12px; font-weight: 600; color: var(--text-sub);
+      text-decoration: none; white-space: nowrap;
+      transition: background .12s, color .12s;
+    }
+    .nav-link:hover { background: var(--primary-soft); color: var(--primary); }
+    .nav-link.active { background: var(--primary-soft); color: var(--primary); }
+
+    /* ── SECTION WRAPPER ── */
+    .section {
+      padding: 60px 24px 72px;
+      border-bottom: 1px solid var(--line-weak);
+    }
+    .section:last-child { border-bottom: none; }
+    .section-cover { padding: 0; border-bottom: 1px solid var(--line-weak); }
+
+    /* ── COVER ── */
+    .cover-wrap {
+      min-height: 520px; background: var(--bg-dark);
+      display: flex; flex-direction: column; align-items: center;
+      justify-content: center; text-align: center; padding: 72px 24px;
+      position: relative; overflow: hidden;
+    }
+    .cover-wrap::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 30% 50%, rgba(0,94,235,.15) 0%, transparent 60%),
+                  radial-gradient(ellipse at 70% 50%, rgba(0,167,167,.10) 0%, transparent 60%);
+    }
+    .cover-inner { position: relative; z-index: 1; max-width: 680px; }
+    .cover-eyebrow {
+      display: inline-flex; align-items: center; height: 26px; padding: 0 14px;
+      border-radius: 9999px; border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.08);
+      font-size: 11px; font-weight: 700; color: rgba(255,255,255,.6);
+      letter-spacing: .08em; margin-bottom: 20px;
+    }
+    .cover-title {
+      font-size: 44px; font-weight: 800; color: #fff;
+      letter-spacing: -0.03em; line-height: 1.15; margin-bottom: 12px;
+    }
+    .cover-title em { font-style: normal; color: var(--primary); }
+    .cover-sub {
+      font-size: 17px; font-weight: 500; color: rgba(255,255,255,.55);
+      margin-bottom: 36px; line-height: 1.6;
+    }
+    .cover-tags { display: flex; gap: 10px; justify-content: center; flex-wrap: wrap; }
+    .cover-tag {
+      display: inline-flex; align-items: center; height: 34px; padding: 0 16px;
+      border-radius: 9999px; border: 1px solid rgba(255,255,255,.2);
+      background: rgba(255,255,255,.07);
+      font-size: 13px; font-weight: 600; color: rgba(255,255,255,.65);
+    }
+    .cover-bottom {
+      max-width: 1040px; margin: 0 auto;
+      padding: 20px 24px; display: flex; justify-content: space-between; align-items: center;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .cover-bottom-text { font-size: 12px; font-weight: 500; color: var(--text-hint); }
+    .cover-pillar-row { display: flex; gap: 8px; flex-wrap: wrap; }
+    .cover-pillar {
+      display: inline-flex; align-items: center; gap: 6px;
+      height: 30px; padding: 0 12px; border-radius: 8px;
+      background: var(--bg-card); border: 1px solid var(--line-normal);
+      font-size: 11px; font-weight: 700; color: var(--text-sub);
+      box-shadow: var(--shadow-em);
+    }
+    .cover-pillar .dot { width: 6px; height: 6px; border-radius: 50%; }
+
+    /* ── HERO HEADER (reused per section) ── */
+    .hero { max-width: 1040px; margin: 0 auto 28px; display: flex; align-items: flex-end; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .hero-phase {
+      display: inline-flex; align-items: center; height: 26px; padding: 0 12px;
+      border-radius: 9999px; background: var(--primary); color: #fff;
+      font-size: 11px; font-weight: 700; letter-spacing: .06em; margin-bottom: 10px;
+    }
+    .hero-phase.teal { background: var(--teal); }
+    .hero-phase.navy { background: var(--navy); }
+    .hero-phase.dark { background: var(--bg-dark); }
+    .hero-title { font-size: 28px; font-weight: 700; letter-spacing: -0.025em; color: var(--text-main); line-height: 1.2; }
+    .hero-title em { font-style: normal; color: var(--primary); }
+    .hero-sub { margin-top: 8px; font-size: 15px; font-weight: 500; color: var(--text-sub); }
+    .hero-meta { display: flex; gap: 8px; flex-wrap: wrap; align-self: flex-start; margin-top: 4px; }
+    .meta-tag {
+      display: inline-flex; align-items: center; height: 34px; padding: 0 14px;
+      border-radius: 9999px; border: 1px solid var(--line-normal);
+      background: var(--bg-card); font-size: 12px; font-weight: 600; color: var(--text-sub);
+      box-shadow: var(--shadow-em);
+    }
+
+    /* ── GOAL BANNER ── */
+    .goal-banner {
+      max-width: 1040px; margin: 0 auto 28px;
+      background: var(--bg-dark); border-radius: 20px;
+      padding: 22px 28px; display: flex; align-items: center; gap: 18px;
+    }
+    .goal-icon {
+      width: 42px; height: 42px; border-radius: 12px; background: var(--primary);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .goal-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,.4); letter-spacing: .08em; margin-bottom: 4px; }
+    .goal-text { font-size: 15px; font-weight: 600; color: rgba(255,255,255,.92); line-height: 1.5; }
+    .goal-kpi { margin-left: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+    .kpi-item {
+      display: inline-flex; align-items: center; height: 26px; padding: 0 12px;
+      border-radius: 9999px; border: 1px solid rgba(255,255,255,.15);
+      font-size: 11px; font-weight: 600; color: rgba(255,255,255,.75);
+    }
+
+    /* ── SECTION LABEL ── */
+    .section-label { max-width: 1040px; margin: 0 auto 14px; display: flex; align-items: center; gap: 10px; }
+    .section-label-text { font-size: 11px; font-weight: 700; color: var(--text-hint); letter-spacing: .06em; text-transform: uppercase; white-space: nowrap; }
+    .section-label-line { flex: 1; height: 1px; background: var(--line-weak); }
+
+    /* ── TASK CARD (P2-style) ── */
+    .task-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .task-grid-3 { max-width: 1040px; margin: 14px auto 0; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .task-grid-5 { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(5,1fr); gap: 12px; }
+    .task-grid-2 { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(2,1fr); gap: 14px; }
+    .task-card {
+      background: var(--bg-card); border-radius: 20px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      overflow: hidden; display: flex; flex-direction: column;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .task-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .task-card.blue { border-color: var(--primary-border); }
+    .task-card.blue .task-num { background: var(--primary); color: #fff; }
+    .task-card.blue .task-dot { background: var(--primary); }
+    .task-card.blue .task-name { color: var(--primary); }
+    .task-card-top { padding: 16px 18px 12px; flex: 1; }
+    .task-num-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .task-num {
+      width: 30px; height: 30px; border-radius: 50%; background: var(--bg-page);
+      display: flex; align-items: center; justify-content: center;
+      font-size: 12px; font-weight: 700; color: var(--text-sub);
+    }
+    .task-category { font-size: 9px; font-weight: 700; color: var(--text-hint); letter-spacing: .05em; }
+    .task-name { font-size: 14px; font-weight: 700; color: var(--text-main); letter-spacing: -0.01em; line-height: 1.3; margin-bottom: 5px; }
+    .task-tagline { font-size: 11px; font-weight: 500; color: var(--text-sub); line-height: 1.5; }
+    .task-card-divider { height: 1px; background: var(--line-weak); margin: 0 18px; }
+    .task-card-body { padding: 12px 18px 14px; display: flex; flex-direction: column; gap: 7px; }
+    .task-point { display: flex; gap: 7px; align-items: flex-start; }
+    .task-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--line-normal); flex-shrink: 0; margin-top: 7px; }
+    .task-point-text { font-size: 11px; font-weight: 500; color: var(--text-main); line-height: 1.6; }
+
+    /* ── STATUS BADGE ── */
+    .status-badge {
+      display: inline-flex; align-items: center; height: 20px; padding: 0 8px;
+      border-radius: 9999px; font-size: 10px; font-weight: 700; letter-spacing: .02em;
+    }
+    .status-green { background: rgba(0,191,64,.12); color: #007A2A; }
+    .status-red { background: rgba(255,66,66,.12); color: #CC0000; }
+    .status-teal { background: rgba(0,167,167,.12); color: #006666; }
+    .status-blue { background: var(--primary-soft); color: var(--primary); }
+
+    /* ── STAT CARD ── */
+    .stat-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .stat-card {
+      background: var(--bg-card); border-radius: 20px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 24px; text-align: center;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .stat-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .stat-num { font-size: 40px; font-weight: 800; letter-spacing: -0.03em; color: var(--primary); line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 13px; font-weight: 600; color: var(--text-sub); margin-bottom: 8px; }
+    .stat-desc { font-size: 11px; font-weight: 500; color: var(--text-hint); line-height: 1.5; }
+
+    /* ── TIMELINE ── */
+    .timeline-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 12px; }
+    .timeline-card {
+      background: var(--bg-card); border-radius: 16px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 18px; position: relative; overflow: hidden;
+    }
+    .timeline-card::before {
+      content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px;
+      background: var(--primary); border-radius: 16px 16px 0 0;
+    }
+    .timeline-card.done::before { background: var(--green); }
+    .timeline-card.ongoing::before { background: var(--primary); }
+    .timeline-card.plan::before { background: var(--line-normal); }
+    .timeline-period { font-size: 10px; font-weight: 700; color: var(--text-hint); letter-spacing: .05em; margin-bottom: 6px; }
+    .timeline-title { font-size: 13px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; line-height: 1.3; }
+    .timeline-desc { font-size: 11px; font-weight: 500; color: var(--text-sub); line-height: 1.5; }
+    .timeline-badge {
+      display: inline-flex; margin-top: 10px; align-items: center; height: 18px; padding: 0 8px;
+      border-radius: 9999px; font-size: 10px; font-weight: 700;
+    }
+
+    /* ── MVC CARDS ── */
+    .mvc-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; }
+    .mvc-card {
+      background: var(--bg-card); border-radius: 20px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 24px; display: flex; flex-direction: column; gap: 10px;
+    }
+    .mvc-icon {
+      width: 40px; height: 40px; border-radius: 12px; background: var(--primary-soft);
+      display: flex; align-items: center; justify-content: center; flex-shrink: 0;
+    }
+    .mvc-label { font-size: 10px; font-weight: 700; color: var(--primary); letter-spacing: .08em; }
+    .mvc-title { font-size: 16px; font-weight: 700; color: var(--text-main); line-height: 1.3; letter-spacing: -0.01em; }
+    .mvc-body { font-size: 12px; font-weight: 500; color: var(--text-sub); line-height: 1.65; }
+
+    /* ── WR GRID ── */
+    .wr-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .wr-card {
+      background: var(--bg-card); border-radius: 16px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 18px 20px; overflow: hidden;
+    }
+    .wr-value {
+      display: inline-flex; align-items: center; height: 22px; padding: 0 10px;
+      border-radius: 9999px; font-size: 11px; font-weight: 700;
+      margin-bottom: 10px;
+    }
+    .wr-value.challenge { background: rgba(0,94,235,.1); color: var(--primary); }
+    .wr-value.connect { background: rgba(0,167,167,.1); color: var(--teal); }
+    .wr-value.respect { background: rgba(26,43,60,.1); color: var(--navy); }
+    .wr-title { font-size: 15px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; letter-spacing: -0.01em; }
+    .wr-rules { display: flex; flex-direction: column; gap: 5px; }
+    .wr-rule { display: flex; gap: 7px; align-items: flex-start; }
+    .wr-rule-num { font-size: 10px; font-weight: 700; color: var(--primary); width: 16px; flex-shrink: 0; margin-top: 1px; }
+    .wr-rule-text { font-size: 12px; font-weight: 500; color: var(--text-sub); line-height: 1.5; }
+
+    /* ── WAVE CARD (전파 활동) ── */
+    .wave-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .wave-card {
+      background: var(--bg-card); border-radius: 20px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 22px; position: relative; overflow: hidden;
+      transition: box-shadow .15s, transform .15s;
+    }
+    .wave-card:hover { box-shadow: var(--shadow-md); transform: translateY(-2px); }
+    .wave-step {
+      font-size: 11px; font-weight: 700; color: var(--text-hint);
+      letter-spacing: .06em; margin-bottom: 6px;
+    }
+    .wave-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 8px; letter-spacing: -0.01em; }
+    .wave-date { font-size: 12px; font-weight: 600; color: var(--primary); margin-bottom: 10px; }
+    .wave-desc { font-size: 12px; font-weight: 500; color: var(--text-sub); line-height: 1.65; }
+    .wave-badge {
+      display: inline-flex; margin-top: 14px; align-items: center; height: 22px; padding: 0 10px;
+      border-radius: 9999px; font-size: 10px; font-weight: 700;
+    }
+
+    /* ── EVENT CARD ── */
+    .event-card {
+      max-width: 1040px; margin: 0 auto 14px;
+      background: var(--bg-card); border-radius: 20px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 24px 28px; display: flex; align-items: center; gap: 24px;
+    }
+    .event-date-box {
+      width: 64px; height: 64px; border-radius: 16px; background: var(--primary);
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      flex-shrink: 0; color: #fff;
+    }
+    .event-month { font-size: 10px; font-weight: 700; letter-spacing: .06em; }
+    .event-day { font-size: 24px; font-weight: 800; line-height: 1; }
+    .event-title { font-size: 17px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+    .event-desc { font-size: 13px; font-weight: 500; color: var(--text-sub); line-height: 1.6; }
+    .event-meta { margin-left: auto; flex-shrink: 0; display: flex; flex-direction: column; align-items: flex-end; gap: 6px; }
+
+    /* ── XFN TEAM CARD ── */
+    .xfn-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(4,1fr); gap: 14px; }
+    .xfn-card {
+      background: var(--bg-card); border-radius: 16px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 18px;
+    }
+    .xfn-role { font-size: 10px; font-weight: 700; color: var(--text-hint); letter-spacing: .06em; margin-bottom: 6px; }
+    .xfn-name { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+    .xfn-tags { display: flex; gap: 5px; flex-wrap: wrap; }
+    .xfn-tag {
+      display: inline-flex; align-items: center; height: 18px; padding: 0 7px;
+      border-radius: 4px; background: var(--bg-page);
+      font-size: 10px; font-weight: 600; color: var(--text-sub);
+    }
+
+    /* ── KPI TABLE ── */
+    .kpi-grid { max-width: 1040px; margin: 0 auto; display: grid; grid-template-columns: repeat(3,1fr); gap: 14px; }
+    .kpi-card {
+      background: var(--bg-card); border-radius: 20px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 20px;
+    }
+    .kpi-label { font-size: 11px; font-weight: 700; color: var(--text-hint); letter-spacing: .05em; margin-bottom: 8px; }
+    .kpi-value { font-size: 28px; font-weight: 800; color: var(--text-main); letter-spacing: -0.03em; line-height: 1; margin-bottom: 4px; }
+    .kpi-target { font-size: 12px; font-weight: 500; color: var(--text-sub); }
+    .kpi-bar { height: 4px; background: var(--line-weak); border-radius: 9999px; margin-top: 14px; overflow: hidden; }
+    .kpi-bar-fill { height: 100%; border-radius: 9999px; background: var(--primary); }
+
+    /* ── PLAN CARD ── */
+    .plan-card {
+      max-width: 1040px; margin: 0 auto 14px;
+      background: var(--bg-card); border-radius: 20px;
+      border: 1px solid var(--line-weak); box-shadow: var(--shadow-em);
+      padding: 22px 28px;
+    }
+    .plan-grid-inner { display: grid; grid-template-columns: repeat(3,1fr); gap: 20px; }
+    .plan-item-label { font-size: 11px; font-weight: 700; color: var(--text-hint); letter-spacing: .05em; margin-bottom: 8px; }
+    .plan-item-title { font-size: 14px; font-weight: 700; color: var(--text-main); margin-bottom: 6px; }
+    .plan-item-list { display: flex; flex-direction: column; gap: 5px; }
+    .plan-item-row { display: flex; gap: 7px; align-items: flex-start; }
+    .plan-item-dot { width: 4px; height: 4px; border-radius: 50%; background: var(--line-normal); flex-shrink: 0; margin-top: 7px; }
+    .plan-item-text { font-size: 12px; font-weight: 500; color: var(--text-sub); line-height: 1.6; }
+
+    /* ── OUTRO ── */
+    .outro-dark {
+      max-width: 1040px; margin: 0 auto 24px;
+      background: var(--bg-dark); border-radius: 20px;
+      padding: 40px; text-align: center;
+    }
+    .outro-quote {
+      font-size: 26px; font-weight: 700; color: #fff;
+      letter-spacing: -0.02em; line-height: 1.4; margin-bottom: 12px;
+    }
+    .outro-quote em { font-style: normal; color: var(--primary); }
+    .outro-attr { font-size: 13px; font-weight: 500; color: rgba(255,255,255,.4); }
+
+    /* ── FOOTER ── */
+    .page-footer {
+      max-width: 1040px; margin: 32px auto 0;
+      display: flex; align-items: center; justify-content: space-between;
+      flex-wrap: wrap; gap: 12px;
+    }
+    .footer-text { font-size: 12px; font-weight: 500; color: var(--text-hint); }
+    .footer-badges { display: flex; gap: 8px; }
+    .footer-badge {
+      display: inline-flex; align-items: center; gap: 5px; height: 26px; padding: 0 10px;
+      border-radius: 9999px; background: var(--bg-card); border: 1px solid var(--line-normal);
+      font-size: 11px; font-weight: 600; color: var(--text-sub); box-shadow: var(--shadow-em);
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 860px) {
+      .task-grid, .stat-grid, .mvc-grid, .wave-grid, .wr-grid, .xfn-grid, .kpi-grid { grid-template-columns: repeat(2,1fr); }
+      .task-grid-3, .timeline-grid { grid-template-columns: repeat(2,1fr); }
+      .task-grid-5 { grid-template-columns: repeat(3,1fr); }
+    }
+    @media (max-width: 540px) {
+      .task-grid, .task-grid-3, .task-grid-5, .task-grid-2, .stat-grid, .mvc-grid, .wave-grid, .wr-grid, .xfn-grid, .kpi-grid, .timeline-grid { grid-template-columns: 1fr; }
+      .cover-title { font-size: 32px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ══════════════════════════════════════════
+     STICKY NAVIGATION
+══════════════════════════════════════════ -->
+<nav class="site-nav">
+  <div class="nav-inner">
+    <div class="nav-brand">상상인그룹 <span>WR</span></div>
+    <div class="nav-links">
+      <a class="nav-link" href="#cover">표지</a>
+      <a class="nav-link" href="#intro">INTRO</a>
+      <a class="nav-link" href="#ch1">CH.1 MVC재정립</a>
+      <a class="nav-link" href="#ch2">CH.2 전파활동</a>
+      <a class="nav-link" href="#ch3">CH.3 XFN PJT</a>
+      <a class="nav-link" href="#ch4">CH.4 P1 SEE</a>
+      <a class="nav-link" href="#ch5">CH.5 P2 DO</a>
+      <a class="nav-link" href="#ch6">CH.6 P3 SHARE</a>
+      <a class="nav-link" href="#ch7">CH.7 P4 EMBED</a>
+      <a class="nav-link" href="#outro">OUTRO</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════
+     COVER
+══════════════════════════════════════════ -->
+<section id="cover" class="section-cover">
+  <div class="cover-wrap">
+    <div class="cover-inner">
+      <div class="cover-eyebrow">'26년 · 상상인그룹 인재경영실</div>
+      <h1 class="cover-title">Winning Rules <em>내재화 활동</em><br>"선포에서 내재화로"</h1>
+      <p class="cover-sub">핵심가치를 조직의 일상 속에 녹여내는 여정<br>SEE → DO → SHARE → EMBED</p>
+      <div class="cover-tags">
+        <span class="cover-tag">6개 그룹사</span>
+        <span class="cover-tag">XFN PJT</span>
+        <span class="cover-tag">인재경영실</span>
+      </div>
+    </div>
+  </div>
+  <div class="cover-bottom">
+    <span class="cover-bottom-text">상상인그룹 Winning Rules 내재화 XFN PJT · 인재경영실</span>
+    <div class="cover-pillar-row">
+      <span class="cover-pillar"><span class="dot" style="background:#005EEB"></span>P1 SEE</span>
+      <span class="cover-pillar"><span class="dot" style="background:#00A7A7"></span>P2 DO</span>
+      <span class="cover-pillar"><span class="dot" style="background:#1A2B3C"></span>P3 SHARE</span>
+      <span class="cover-pillar"><span class="dot" style="background:#FF9200"></span>P4 EMBED</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     INTRO
+══════════════════════════════════════════ -->
+<section id="intro" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase dark">INTRO</div>
+      <h2 class="hero-title">왜 지금 <em>Winning Rules 내재화</em>인가</h2>
+      <p class="hero-sub">데이터가 증명하는 핵심가치의 경영 성과와 내재화 필요성</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">경영 나침반</span>
+    </div>
+  </div>
+
+  <div class="stat-grid" style="margin-bottom:24px;">
+    <div class="stat-card">
+      <div class="stat-num">3.9<span style="font-size:24px;">x</span></div>
+      <div class="stat-label">주가 성과 우위</div>
+      <div class="stat-desc">MVC를 강하게 실천하는 기업은 그렇지 않은 기업 대비 
+	  주가 성과 3.9배 높음</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" style="color:#00BF40;">-23<span style="font-size:24px;">%</span></div>
+      <div class="stat-label">이직률 감소</div>
+      <div class="stat-desc">핵심가치 내재화 조직은 그렇지 않은 조직 대비 
+	  직원 이직률 23% 낮음</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num">+40<span style="font-size:24px;">%</span></div>
+      <div class="stat-label">몰입도 상승</div>
+      <div class="stat-desc">MVC 체화 조직의 직원 몰입도는 업계 평균 대비 
+	  40% 이상 높게 측정됨</div>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">전체 프로젝트 여정</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="timeline-grid" style="margin-bottom:24px;">
+    <div class="timeline-card done">
+      <div class="timeline-period">'24.12 ~ '26.03</div>
+      <div class="timeline-title">MVC 재정립</div>
+      <div class="timeline-desc">비전 신규 수립. 핵심가치 기존 소통·도전·창의에서 도전·연결·존중으로 재정립</div>
+      <span class="timeline-badge" style="background:rgba(0,191,64,.1);color:#007A2A;">완료</span>
+    </div>
+    <div class="timeline-card done">
+      <div class="timeline-period">'26.03 ~ '26.04</div>
+      <div class="timeline-title">MVC 전파</div>
+      <div class="timeline-desc">1st 대표급 → 2nd 그룹사 HR →<br>3RD전 임직원(그룹CEO 키노트)</div>
+      <span class="timeline-badge" style="background:rgba(0,191,64,.1);color:#007A2A;">완료</span>
+    </div>
+    <div class="timeline-card ongoing">
+      <div class="timeline-period">'26.05 ~ 진행중</div>
+      <div class="timeline-title">XFN PJT WR내재화</div>
+      <div class="timeline-desc">P1 SEE · P2 DO · P3 SHARE · P4 EMBED<br>XFN PJT는 Pillar 1~3 추진</div>
+      <span class="timeline-badge" style="background:rgba(0,94,235,.1);color:#005EEB;">진행중</span>
+    </div>
+    <div class="timeline-card plan">
+      <div class="timeline-period">'26.하반기~</div>
+      <div class="timeline-title">제도 연계 완성(P4)</div>
+      <div class="timeline-desc">평가·보상·채용·온보딩 전반에 WR을 제도화하여 지속가능한 내재화 달성</div>
+      <span class="timeline-badge" style="background:rgba(112,115,124,.1);color:#70737C;">계획</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">Winning Rules 내재화 전략 프레임워크</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="task-grid">
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num" style="background:rgba(0,94,235,.1);color:#005EEB;">P1</div>
+          <span class="task-category">SEE</span>
+        </div>
+        <div class="task-name">인식 확산</div>
+        <div class="task-tagline">눈에 보이는 모든 곳에서 WR을 마주치게</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">디지털 사이니지·사내레터·이메일 서명</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">공간 네이밍·BGM·포스터·배너</div></div>
+      </div>
+    </div>
+    <div class="task-card blue">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">P2</div>
+          <span class="task-category">DO</span>
+        </div>
+        <div class="task-name">행동 내재화</div>
+        <div class="task-tagline">업무 루틴 속 매일 반복되는 핵심가치</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">MVC Screen Saver·WR 체크리스트</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">릴레이 챌린지·월간 학습카드·루틴</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num" style="background:rgba(0,167,167,.1);color:#00A7A7;">P3</div>
+          <span class="task-category">SHARE</span>
+        </div>
+        <div class="task-name">경험 공유</div>
+        <div class="task-tagline">구성원의 이야기가 다시 MVC를 강화</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">우수 사례 수집·공유 채널 운영</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">뉴스레터, Culture Deck 제작</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num" style="background:rgba(255,146,0,.1);color:#CC7700;">P4</div>
+          <span class="task-category">EMBED</span>
+        </div>
+        <div class="task-name">HR 제도 연계</div>
+        <div class="task-tagline">평가·보상·채용으로 MVC를 제도화</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">성과평가 MVC 반영 체계 수립</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">채용·온보딩 MVC 기준 통합</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · INTRO</span>
+    <div class="footer-badges">
+      <span class="footer-badge">6개 그룹사</span>
+      <span class="footer-badge">'26.05 ~'26.07</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CH.1  MVC 재정립
+══════════════════════════════════════════ -->
+<section id="ch1" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase">CH.1 · MVC 재정립</div>
+      <h2 class="hero-title">도전 · 연결 · <em>존중</em></h2>
+      <p class="hero-sub">그룹CEO의 경영철학이 반영 된 핵심가치</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">'24.12 ~ '26.02</span>
+    </div>
+  </div>
+
+  <div class="goal-banner">
+    <div class="goal-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 2L2 7l10 5 10-5-10-5z"/><path d="M2 17l10 5 10-5"/><path d="M2 12l10 5 10-5"/></svg>
+    </div>
+    <div>
+      <div class="goal-label">재정립 배경</div>
+      <div class="goal-text">기존 소통·도전·창의 → 도전·연결·존중으로 전면 재정립</div>
+    </div>
+    <div class="goal-kpi">
+      <span class="kpi-item">4단계 수립</span>
+      <span class="kpi-item">그룹CEO & 센터조직 리터 참여</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">4단계 수립 프로세스</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="timeline-grid" style="margin-bottom:28px;">
+    <div class="timeline-card done">
+      <div class="timeline-period">1단계 · '24.12~'25.01</div>
+      <div class="timeline-title">인재상 수립 논의</div>
+      <div class="timeline-desc">'어떤 인재를 뽑을 것인가?'라는 질문에서 시작,<br>'우리가 어떤 회사인가?'라는 근본적인 정체성(MVC)을 확립하는 여정</div>
+    </div>
+    <div class="timeline-card done">
+      <div class="timeline-period">2단계 · '25.01~'25.04</div>
+      <div class="timeline-title">그룹CEO 경영 철학 분석</div>
+      <div class="timeline-desc">'24년 1월부터 기록 관리해온 그룹CEO 어록을<br>분석하여 MVC의 근간 마련</div>
+    </div>
+    <div class="timeline-card done">
+      <div class="timeline-period">3단계 · '25.04~'26.02</div>
+      <div class="timeline-title">초안 수립 & 구체화 및 정교화</div>
+      <div class="timeline-desc">그룹CEO 전 과정 직접 참여&외부 전문가 협업<br>1/2차워크샵 진행(센터조직 리더)</div>
+    </div>
+    <div class="timeline-card done">
+      <div class="timeline-period">4단계 · '26.04</div>
+      <div class="timeline-title">확정 및 선포</div>
+      <div class="timeline-desc">그룹사 CEO 검토 → 그룹CEO 키노트 선포</div>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">확정된 MVC</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="mvc-grid" style="margin-bottom:28px;">
+    <div class="mvc-card">
+      <div class="mvc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#005EEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><path d="M12 8v4l3 3"/></svg>
+      </div>
+      <div class="mvc-label">MISSION</div>
+      <div class="mvc-title">상상으로<br>세상을 이롭게</div>
+      <div class="mvc-body">사람, 공동체, 세상과 더불어 사회와의 이로운 동행 추구</div>
+    </div>
+    <div class="mvc-card">
+      <div class="mvc-icon">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#005EEB" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 6s4-2 11-2 11 2 11 2"/><path d="M1 18s4-2 11-2 11 2 11 2"/><path d="M3 12h18"/></svg>
+      </div>
+      <div class="mvc-label">VISION</div>
+      <div class="mvc-title">2035년<br>매출 3.5조, 영업이익 4,000억</div>
+      <div class="mvc-body">그룹의 전체 볼륨을 키우고, 메이저 플레이어로 도약함을 강조</div>
+    </div>
+    <div class="mvc-card" style="background:var(--bg-dark);">
+      <div class="mvc-icon" style="background:rgba(255,255,255,.1);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/></svg>
+      </div>
+      <div class="mvc-label" style="color:rgba(255,255,255,.4);">CORE VALUES</div>
+      <div class="mvc-title" style="color:#fff;">도전 · 연결 · 존중<br></div>
+      <div class="mvc-body" style="color:rgba(255,255,255,.55);">9가지 Winning Rules로 구체화된 행동강령<br>— 매일의 업무에서 실천하는 핵심가치</div>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">9가지 Winning Rules</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="wr-grid">
+    <div class="wr-card">
+      <span class="wr-value challenge">도전 (Challenge)</span>
+      <div class="wr-title">기다리지 않고 먼저 나서며, 빠르게 실행하고,<br>실패에서도 배운다.</div>
+      <div class="wr-rules">
+        <div class="wr-rule"><div class="wr-rule-num">WR1</div><div class="wr-rule-text">변화를 이끌거나, 비키거나.</div></div>
+        <div class="wr-rule"><div class="wr-rule-num">WR2</div><div class="wr-rule-text">완성보다 속도, 성공보다 시도.</div></div>
+        <div class="wr-rule"><div class="wr-rule-num">WR3</div><div class="wr-rule-text">배움은 생존을 위한 가장 공격적인 투자다.</div></div>
+      </div>
+    </div>
+    <div class="wr-card">
+      <span class="wr-value connect">연결 (Connection)</span>
+      <div class="wr-title">내부와 외부, 직급과 역할의 경계를 허물고<br>함께 더 큰 답을 만든다.</div>
+      <div class="wr-rules">
+        <div class="wr-rule"><div class="wr-rule-num" style="color:var(--teal);">WR4</div><div class="wr-rule-text">외부 인사이트를 내부 자산으로 연결한다.</div></div>
+        <div class="wr-rule"><div class="wr-rule-num" style="color:var(--teal);">WR5</div><div class="wr-rule-text">직급에 상관없이 전원이 의사결정에 참여해야 한다.</div></div>
+        <div class="wr-rule"><div class="wr-rule-num" style="color:var(--teal);">WR6</div><div class="wr-rule-text">우리 팀을 넘어 우리 회사의 답을 찾는다.</div></div>
+      </div>
+    </div>
+    <div class="wr-card">
+      <span class="wr-value respect">존중 (Respect)</span>
+      <div class="wr-title">다름을 두려워하지 않고, 끝까지 듣고,<br>차이를 조직의 힘으로 삼는다.</div>
+      <div class="wr-rules">
+        <div class="wr-rule"><div class="wr-rule-num" style="color:var(--navy);">WR7</div><div class="wr-rule-text">우리는 뒤에서 말하지 않는다.</div></div>
+        <div class="wr-rule"><div class="wr-rule-num" style="color:var(--navy);">WR8</div><div class="wr-rule-text">동료의 의견을 듣는 것도 월급에 포함이다.</div></div>
+        <div class="wr-rule"><div class="wr-rule-num" style="color:var(--navy);">WR9</div><div class="wr-rule-text">다름을 인정해라. 내가 틀릴 수도 있다.</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · CH.1 MVC 재정립</span>
+    <div class="footer-badges">
+      <span class="footer-badge">'24.12 ~ '26.02</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CH.2  전파 활동
+══════════════════════════════════════════ -->
+<section id="ch2" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase">CH.2 · 전파 활동</div>
+      <h2 class="hero-title">3단계 <em>전파</em> 구조</h2>
+      <p class="hero-sub">대표급에서 전 임직원으로, 선포식으로 이어지는 단계적 MVC 확산</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">'26.02 ~ '26.07</span>
+    </div>
+  </div>
+
+  <div class="goal-banner">
+    <div class="goal-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 01-2.18 2 19.79 19.79 0 01-8.63-3.07A19.5 19.5 0 013.07 9.63a19.79 19.79 0 01-3.07-8.67A2 2 0 012 0h3a2 2 0 012 1.72 12.84 12.84 0 00.7 2.81 2 2 0 01-.45 2.11L6.09 7.91a16 16 0 006 6l1.27-1.27a2 2 0 012.11-.45 12.84 12.84 0 002.81.7A2 2 0 0122 14v3a0 0 0 010-.08z"/></svg>
+    </div>
+    <div>
+      <div class="goal-label">전파 목표</div>
+      <div class="goal-text">구성원 전원이 Winning Rules를 이해하고 업무에 활용하는 수준으로 내재화</div>
+    </div>
+    <div class="goal-kpi">
+      <span class="kpi-item">3단계 전파</span>
+      <span class="kpi-item">그룹CEO 키노트</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">전파 활동 3단계</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="wave-grid" style="margin-bottom:24px;">
+    <div class="wave-card">
+      <div class="wave-step">1단계</div>
+      <div class="wave-title">그룹사 CEO 공유 + HR 세션</div>
+      <div class="wave-date">'26.02 ~ 03</div>
+      <div class="wave-desc">그룹사 CEO 대상, 새롭게 정립된 MVC에 대한 공감대<br>형성을 위한 상세 공유.<br>그룹사 HR인력이 참여하는 Session을 통한 공감, 확산 유도.</div>
+      <span class="wave-badge" style="background:rgba(0,191,64,.1);color:#007A2A;">완료</span>
+    </div>
+    <div class="wave-card">
+      <div class="wave-step">2단계</div>
+      <div class="wave-title">그룹CEO 키노트 선포식</div>
+      <div class="wave-date">'26.04.30</div>
+      <div class="wave-desc">그룹CEO 주관 전체 임직원 대상 MVC 선포식 진행.<br>온/오프라인 동시 진행으로 전 그룹사 임직원 참여.</div>
+      <span class="wave-badge" style="background:rgba(0,191,64,.1);color:#007A2A;">완료</span>
+    </div>
+    <div class="wave-card">
+      <div class="wave-step">3단계</div>
+      <div class="wave-title">지속 전파</div>
+      <div class="wave-date">'26.05 ~</div>
+      <div class="wave-desc">XFN PJT 3개 Pillar 과제 실행을 통한 일상적·지속적<br>MVC 전파 활동 전개.</div>
+      <span class="wave-badge" style="background:rgba(0,94,235,.1);color:#005EEB;">진행중</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">주요 행사</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="event-card">
+    <div class="event-date-box" style="background:#1A2B3C;">
+      <div class="event-month">MAR</div>
+      <div class="event-day">31</div>
+    </div>
+    <div>
+      <div class="event-title">그룹사 HR 세션</div>
+      <div class="event-desc">전 그룹사 HR인력 참석. MVC 재정립 배경·방향성 공유. HR 제도연계 방향 협의. 그룹사별 실행 과제 확인.</div>
+    </div>
+    <div class="event-meta">
+      <span class="status-badge status-green">완료</span>
+      <span class="meta-tag" style="height:28px;font-size:11px;">그룹사 HR</span>
+    </div>
+  </div>
+
+  <div class="event-card">
+    <div class="event-date-box">
+      <div class="event-month">APR</div>
+      <div class="event-day">30</div>
+    </div>
+    <div>
+      <div class="event-title">그룹 CEO 키노트 MVC 선포식</div>
+      <div class="event-desc">그룹 CEO 주관 전체 임직원 대상 공식 선포. 도전·연결·존중 핵심가치 공표. XFN PJT 내재화 활동 공식 출범.</div>
+    </div>
+    <div class="event-meta">
+      <span class="status-badge status-green">완료</span>
+      <span class="meta-tag" style="height:28px;font-size:11px;">전체 임직원</span>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · CH.2 전파 활동</span>
+    <div class="footer-badges">
+      <span class="footer-badge">'26.02 ~ '26.04</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CH.3  XFN PJT
+══════════════════════════════════════════ -->
+<section id="ch3" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase teal">CH.3 · XFN PJT</div>
+      <h2 class="hero-title">Cross-Functional <em>Project</em></h2>
+      <p class="hero-sub">전사 자발적 지원 인력 중 선발된 핵심 인재로 구성된 PJT</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">'26.05 ~ '26.07</span>
+    </div>
+  </div>
+
+  <div class="goal-banner">
+    <div class="goal-icon" style="background:var(--teal);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M17 21v-2a4 4 0 00-4-4H5a4 4 0 00-4 4v2"/><circle cx="9" cy="7" r="4"/><path d="M23 21v-2a4 4 0 00-3-3.87"/><path d="M16 3.13a4 4 0 010 7.75"/></svg>
+    </div>
+    <div>
+      <div class="goal-label">PJT 목표</div>
+      <div class="goal-text">직무 무관, 그룹사 구성원이 함께 3개 Pillar를 실행하여 그룹 전체에 균일한 Winning Rules 내재화 달성</div>
+    </div>
+    <div class="goal-kpi">
+      <span class="kpi-item">3개 그룹사 참여</span>
+      <span class="kpi-item">3 Pillars</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">팀 구성 · 역할</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="xfn-grid" style="margin-bottom:24px;">
+    <div class="xfn-card" style="background:var(--bg-dark);border-color:transparent;">
+      <div class="xfn-role" style="color:rgba(255,255,255,.4);">PO·PM</div>
+      <div class="xfn-name" style="color:#fff;">인재경영실 김창범 실장, 장근원 과장</div>
+      <div class="xfn-tags">
+        <span class="xfn-tag" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);">전략 기획</span>
+        <span class="xfn-tag" style="background:rgba(255,255,255,.1);color:rgba(255,255,255,.6);">총괄 조율</span>
+      </div>
+    </div>
+    <div class="xfn-card">
+      <div class="xfn-role">모회사</div>
+      <div class="xfn-name">김도현 과장, 김태근 대리</div>
+      <div class="xfn-tags">
+        <span class="xfn-tag">구매총무관리팀</span>
+        <span class="xfn-tag">사업2본부2팀</span>
+      </div>
+    </div>
+    <div class="xfn-card">
+      <div class="xfn-role">엠아이텍</div>
+      <div class="xfn-name">조영은 대리</div>
+      <div class="xfn-tags">
+        <span class="xfn-tag">People&Culture팀</span>
+      </div>
+    </div>
+    <div class="xfn-card">
+      <div class="xfn-role">메디카코리아</div>
+      <div class="xfn-name">이현복 과장</div>
+      <div class="xfn-tags">
+        <span class="xfn-tag">사업기획팀</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">KPI 목표 및 평가·보상 체계</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="kpi-grid">
+    <div class="kpi-card">
+      <div class="kpi-label">Winning Rules 인지율</div>
+      <div class="kpi-value">80<span style="font-size:16px;font-weight:600;">%</span></div>
+      <div class="kpi-target">목표 ≥ 80% · 6개 그룹사 측정</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:80%;"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">P1 과제 적용 건 수</div>
+      <div class="kpi-value">10<span style="font-size:16px;font-weight:600;">건</span></div>
+      <div class="kpi-target">목표 10건 전 그룹사 적용</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:100%;background:var(--teal);"></div></div>
+    </div>
+	<div class="kpi-card">
+      <div class="kpi-label">P2 과제 전사 참여율 (P2 DO)</div>
+      <div class="kpi-value">30<span style="font-size:16px;font-weight:600;">%</span></div>
+      <div class="kpi-target">목표 ≥ 30% · 9~11주차</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:30%;"></div></div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · CH.3 PJT 구조</span>
+    <div class="footer-badges">
+      <span class="footer-badge">6개 그룹사</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CH.4  P1 SEE
+══════════════════════════════════════════ -->
+<section id="ch4" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase">CH.4 · P1 SEE</div>
+      <h2 class="hero-title">인식 <em>확산</em> 10과제</h2>
+      <p class="hero-sub">구성원이 매일 Winning Rules 눈으로 마주치게 하는 환경 조성</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">10개 과제</span>
+      <span class="meta-tag">6개 그룹사 전사 적용</span>
+    </div>
+  </div>
+
+  <div class="goal-banner">
+    <div class="goal-icon">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
+    </div>
+    <div>
+      <div class="goal-label">P1 핵심 목표</div>
+      <div class="goal-text">공간·디지털·문서 모든 접점에서 Winning Rules 노출 — 인식 없이 내재화 없다</div>
+    </div>
+    <div class="goal-kpi">
+      <span class="kpi-item">10개 과제</span>
+      <span class="kpi-item">+ 진행 대기 3건</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">No.1 ~ No.5 과제</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="task-grid" style="margin-bottom:12px;">
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">01</div>
+          <span class="status-badge status-green">반영완료</span>
+        </div>
+        <div class="task-name">디지털 사이니지</div>
+        <div class="task-tagline">주간 행동강령 1개<br>집중 노출, 9주 순환</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot" style="background:#00BF40;"></div><div class="task-point-text">Winning Rules 애니매이션 영상 노출</div></div>
+        <div class="task-point"><div class="task-dot" style="background:#00BF40;"></div><div class="task-point-text">영상 지속 업데이트</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">02</div>
+          <span class="status-badge status-green">협조완료</span>
+        </div>
+        <div class="task-name">회의실 TV(+화장실)</div>
+        <div class="task-tagline">회의실 TV 배경 이미지<br>화장실 칸막이 내부 스티커 부착</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">MVC 배경화면 이미지 배포</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">화장실 부착용 스티커 배포</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">03</div>
+          <span class="status-badge status-green">협조완료</span>
+        </div>
+        <div class="task-name">사내레터 활용</div>
+        <div class="task-tagline">칭찬도토리·상상레터 등<br>5월 21일부터 반영</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot" style="background:#00BF40;"></div><div class="task-point-text">칭찬도토리·상상레터 등</div></div>
+        <div class="task-point"><div class="task-dot" style="background:#00BF40;"></div><div class="task-point-text">구성원 대상 메일 발송시 WR 이미지 첨부</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">04</div>
+          <span class="status-badge status-teal">반영 중</span>
+        </div>
+        <div class="task-name">이메일 서명</div>
+        <div class="task-tagline">각사 구성원 개별<br>전 그룹사 안내 완료</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">그룹 공통 이메일 서명 가이드 제공</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">핵심가치(도전/연결/존중) 명시</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-grid-3" style="margin-bottom:0;grid-template-columns:repeat(3,1fr);">
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">05</div>
+          <span class="status-badge status-green">반영완료</span>
+        </div>
+        <div class="task-name">공간 네이밍</div>
+        <div class="task-tagline">행동강령을 공용공간<br>명칭으로, 아크릴 명패</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">공용공간에 WR 기반 명칭 부여</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">아크릴 명패 제작·배포 → 설치 완료</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">06</div>
+          <span class="status-badge status-green">반영완료</span>
+        </div>
+        <div class="task-name">공용공간 BGM</div>
+        <div class="task-tagline">AI 활용하여 WR 음원 제작, 라운지·화장실 등<br>공용공간에서 BGM 재생</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">WR AI 음원 생성 BGM 배포</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">각 사 현황에 맞게 반영(일부 그룹스 스피커 제공)</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">07</div>
+          <span class="status-badge status-green">반영완료</span>
+        </div>
+        <div class="task-name">출입구 배너 설치</div>
+        <div class="task-tagline">WR 배너 3종 세트<br>설치 완료</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">도전·연결·존중 3종 배너 세트</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">본사외 사업소도 포함하여 업무 공간 내 설치 완료</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="section-label" style="margin-top:28px;">
+    <span class="section-label-text">No.8 ~ No.10 과제</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="task-grid-3" style="margin-bottom:24px;grid-template-columns:repeat(3,1fr);">
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">08</div>
+          <span class="status-badge status-green">반영완료</span>
+        </div>
+        <div class="task-name">포스터 9종</div>
+        <div class="task-tagline">행동강령 시각화<br>A3 포스터</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">WR 1~9 각 1종 A3 포스터</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">공용공간 부착 완료</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">09</div>
+          <span class="status-badge status-green">반영완료</span>
+        </div>
+        <div class="task-name">물티슈 케이스</div>
+        <div class="task-tagline">행동강령 스티커<br>케이스</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">WR 문구 스티커 부착 케이스</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">공용공간 비치 완료</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num">10</div>
+          <span class="status-badge status-green">반영완료</span>
+        </div>
+        <div class="task-name">배경화면·화면보호기</div>
+        <div class="task-tagline">PC 배경화면 + 화면보호기<br>+ 잠금해제 이벤트(P2 과제 연계)</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">MVC PC 배경화면 패키지 배포</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">화면보호기 + 잠금 이벤트 설정 가이드 제공</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="goal-banner" style="background:rgba(112,115,124,.08);border:1px dashed var(--line-normal);">
+    <div class="goal-icon" style="background:rgba(112,115,124,.15);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="rgba(112,115,124,.6)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="12" y1="8" x2="12" y2="12"/><line x1="12" y1="16" x2="12.01" y2="16"/></svg>
+    </div>
+    <div>
+      <div class="goal-label" style="color:var(--text-hint);">검토 예정 과제</div>
+      <div class="goal-text" style="color:var(--text-sub);font-size:14px;">No.11 마우스패드 · No.12 클리어파일 · No.13 WR 포춘쿠키 — 실행 여부 검토 중</div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · CH.4 P1 SEE</span>
+    <div class="footer-badges">
+      <span class="footer-badge">10개 과제</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CH.5  P2 DO
+══════════════════════════════════════════ -->
+<section id="ch5" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase" style="background:var(--teal);">CH.5 · P2 DO</div>
+      <h2 class="hero-title">행동 <em>내재화</em></h2>
+      <p class="hero-sub">7가지 과제로 핵심가치를 매일의 업무 속 루틴으로 정착</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">7개 과제</span>
+      <span class="meta-tag">6개 그룹사 전사 적용</span>
+    </div>
+  </div>
+
+  <div class="goal-banner">
+    <div class="goal-icon">
+      <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2" fill="white" stroke="none"/></svg>
+    </div>
+    <div>
+      <div class="goal-label">P2 핵심 목표</div>
+      <div class="goal-text">단순 홍보·인지를 넘어 핵심가치를 매일 반복되는 업무 루틴으로 체화</div>
+    </div>
+    <div class="goal-kpi">
+      <span class="kpi-item">그룹사 안내 전</span>
+      <span class="kpi-item">전사 참여율 30%+</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">7 과제 상세</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="task-grid">
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row"><div class="task-num">01</div><span class="task-category">잠금해제 문구 입력</span></div>
+        <div class="task-name">MVC<br>Screen Saver(P1 과제 연계)</div>
+        <div class="task-tagline">자리를 비운 사이,<br>MVC가 문구를 채운다</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">PC화면에 WR 문구 랜덤 노출</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">설치 → 실행 → 문구 입력으로 즉시 운영</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">자연스러운 반복 노출 유도</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row"><div class="task-num">02</div><span class="task-category">공용 PW 설정</span></div>
+        <div class="task-name">공용<br>비밀번호 안내</div>
+        <div class="task-tagline">와이파이·초기 비밀번호에<br>행동강령을 담아</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">분기별 접속 비밀번호를 Winning Rules 문구로 설정</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">신규 입사자 초기 비밀번호로 행동강령 배포</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">입력할 때마다 자연스럽게 내면화 유도</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row"><div class="task-num">03</div><span class="task-category">INSIGHT OUT</span></div>
+        <div class="task-name">릴레이 지식<br>공유 챌린지</div>
+        <div class="task-tagline">외부 인사이트를<br>내부 자산으로</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">외부 교육·독서 인사이트 등록</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">동료 지목 → 48시간 릴레이(플랫폼 활용)</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">Winning Rules 연계 지식 축적</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row"><div class="task-num">04</div><span class="task-category">WR Card</span></div>
+        <div class="task-name">월간<br>학습 카드</div>
+        <div class="task-tagline">매달 한 장,<br>핵심가치가 몸에 밴다</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">3개월간 전체 구성원 대상 매월 발송</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">월 1개 핵심가치 중점 안내 (3개월간)</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">카드 읽기·미션 실천·익월 인증까지</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-grid-3" style="margin-top:14px;">
+    <div class="task-card blue">
+      <div class="task-card-top">
+        <div class="task-num-row"><div class="task-num">05</div><span class="task-category">체크리스트</span></div>
+        <div class="task-name">WR<br>체크리스트</div>
+        <div class="task-tagline">보고서가<br>행동을 바꿉니다</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">문서 하단 30초 루틴 — WR 1~9 중 골라 체크</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">한 줄 코멘트 남기기로 실천 의식화</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">업무 문서마다 Winning Rules 실천 여부 연계</div></div>
+      </div>
+    </div>
+    <div class="task-card blue">
+      <div class="task-card-top">
+        <div class="task-num-row"><div class="task-num">06</div><span class="task-category">전원참여</span></div>
+        <div class="task-name">전원참여<br>의사결정 루틴</div>
+        <div class="task-tagline">직급에 상관없이 전원이<br>의사결정에 참여</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">PC, 모바일에서 플랫폼 접속</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">회의 중 안건 결정,익명의견 수렴 등에 활용</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">구성원 전원 참여 구조로 의사결정 문화 정착</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row"><div class="task-num">07</div><span class="task-category">상상핏</span></div>
+        <div class="task-name">상상잇<br>(상상人 퀴즈)</div>
+        <div class="task-tagline">실시간 멀티플레이어 퀴즈로<br>9가지 Winning Rules 체득</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">회의·행사 어디든 5분, 링크로 즉시 시작</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">O/X, 주관식 단답형, 선택 나눔 토론 3가지 유형</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">경쟁 방식 게임화로 WR 암기율 제고</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · CH.5 P2 DO · 6~9주차</span>
+    <div class="footer-badges">
+      <span class="footer-badge">6개 그룹사</span>
+      <span class="footer-badge">10주차~</span>
+    </div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CH.6  P3 SHARE
+══════════════════════════════════════════ -->
+<section id="ch6" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase navy">CH.6 · P3 SHARE</div>
+      <h2 class="hero-title">경험 <em>공유</em></h2>
+      <p class="hero-sub">구성원의 Winning Rules 실천 이야기를 수집하고 다시 조직의 자산으로</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">'26.07 ~</span>
+      <span class="meta-tag">계획(안)</span>
+    </div>
+  </div>
+
+  <div class="goal-banner" style="background:var(--navy);">
+    <div class="goal-icon" style="background:rgba(255,255,255,.15);">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/></svg>
+    </div>
+    <div>
+      <div class="goal-label">P3 핵심 목표</div>
+      <div class="goal-text">WR 실천 우수 사례를 발굴·공유하여 긍정적 행동 강화의 선순환 구조 구축</div>
+    </div>
+    <div class="goal-kpi">
+      <span class="kpi-item">우수사례 공유</span>
+      <span class="kpi-item">스토리텔링</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">P3 추진 계획</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="plan-card">
+    <div class="plan-grid-inner">
+      <div>
+        <div class="plan-item-label">우수 사례 수집</div>
+        <div class="plan-item-title">MVC 실천 스토리 발굴</div>
+        <div class="plan-item-list">
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">그룹사별 WR 실천 우수 사례 공모</div></div>
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">매월 우수 실천자 선정·포상</div></div>
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">그룹 단위 Best Practice 아카이브 구축</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="plan-item-label">콘텐츠 제작</div>
+        <div class="plan-item-title">스토리텔링 콘텐츠화</div>
+        <div class="plan-item-list">
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">인터뷰 영상 · 카드뉴스 제작</div></div>
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">사내레터 · 사이니지 연계 배포</div></div>
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">WR별 스토리 시리즈 기획</div></div>
+        </div>
+      </div>
+      <div>
+        <div class="plan-item-label">공유 채널</div>
+        <div class="plan-item-title">내부 공유 체계 운영</div>
+        <div class="plan-item-list">
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">그룹 내 전용 WR SHARE 채널 개설</div></div>
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">그룹사 간 교차 공유 프로그램</div></div>
+          <div class="plan-item-row"><div class="plan-item-dot"></div><div class="plan-item-text">Winning Rules 시상 운영</div></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="wave-grid" style="margin-top:14px;">
+    <div class="wave-card">
+      <div class="wave-step">1단계</div>
+      <div class="wave-title">사례 공모 런칭</div>
+      <div class="wave-desc">그룹 전체 MVC 실천 우수 사례 공모 캠페인 시작. 그룹사별 담당자 지정.</div>
+      <span class="wave-badge" style="background:rgba(112,115,124,.1);color:#70737C;">계획</span>
+    </div>
+    <div class="wave-card">
+      <div class="wave-step">2단계</div>
+      <div class="wave-title">콘텐츠 제작·배포</div>
+      <div class="wave-desc">수집된 사례 기반 스토리텔링 콘텐츠 제작. 사내 채널 연계 배포.</div>
+      <span class="wave-badge" style="background:rgba(112,115,124,.1);color:#70737C;">계획</span>
+    </div>
+    <div class="wave-card">
+      <div class="wave-step">3단계</div>
+      <div class="wave-title">Winning Rules 시상</div>
+      <div class="wave-desc">연간 WR 우수 실천자 시상 및 사례 공유.</div>
+      <span class="wave-badge" style="background:rgba(112,115,124,.1);color:#70737C;">계획</span>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · CH.6 P3 SHARE</span>
+    <div class="footer-badges"><span class="footer-badge">'26.07 ~</span></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     CH.7  P4 EMBED
+══════════════════════════════════════════ -->
+<section id="ch7" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase" style="background:#CC7700;">CH.7 · P4 EMBED</div>
+      <h2 class="hero-title">HR <em>제도</em> 연계(안)</h2>
+      <p class="hero-sub">평가·보상·채용·온보딩 전반에 WR를 제도화하여 지속가능한 내재화 달성</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">'26 하반기~</span>
+      <span class="meta-tag">계획(안)</span>
+    </div>
+  </div>
+
+  <div class="goal-banner" style="background:#1A2B3C;">
+    <div class="goal-icon" style="background:#CC7700;">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 00-2-2h-4a2 2 0 00-2 2v16"/></svg>
+    </div>
+    <div>
+      <div class="goal-label">P4 핵심 목표</div>
+      <div class="goal-text">MVC를 성과평가·채용·보상 기준에 공식 반영하여 제도적으로 지속가능한 내재화 완성</div>
+    </div>
+    <div class="goal-kpi">
+      <span class="kpi-item">평가/보상 반영</span>
+      <span class="kpi-item">채용 연계</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">P4 제도연계 영역</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="task-grid-2" style="margin-bottom:14px;">
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num" style="background:rgba(204,119,0,.1);color:#CC7700;">P4-1</div>
+          <span class="task-category">성과평가</span>
+        </div>
+        <div class="task-name">WR 기반 성과평가 체계</div>
+        <div class="task-tagline">Winning Rules 실천을 정량·정성 평가에 반영</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">WR 행동 역량 평가 문항을 통한 진단 시행 (그룹 진단 연계)</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">평가(승진)에 WR 항목 공식 반영</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">직책/직위별 가중치 차등 적용 방안 수립</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num" style="background:rgba(204,119,0,.1);color:#CC7700;">P4-2</div>
+          <span class="task-category">채용·온보딩</span>
+        </div>
+        <div class="task-name">WR 기반 채용·온보딩</div>
+        <div class="task-tagline">입사 첫날부터 WR을 기준으로</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">채용 면접 WR 역량 기반 평가 문항 표준화</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">신입 온보딩 WR 필수 교육 과정 편성</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">입사자 30일 WR 내재화 체크포인트 운영</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="task-grid-2">
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num" style="background:rgba(204,119,0,.1);color:#CC7700;">P4-3</div>
+          <span class="task-category">보상·포상</span>
+        </div>
+        <div class="task-name">WR 실천 보상 체계</div>
+        <div class="task-tagline">우수 WR 실천 사례를 공식적으로 인정</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">WR 시상(P3 과제 지속) 및 포상 제도 운영</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">그룹사별 WR 실천 우수팀/개인 포상 연계</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">승진 심사 WR 역량 반영 기준 수립</div></div>
+      </div>
+    </div>
+    <div class="task-card">
+      <div class="task-card-top">
+        <div class="task-num-row">
+          <div class="task-num" style="background:rgba(204,119,0,.1);color:#CC7700;">P4-4</div>
+          <span class="task-category">교육·육성</span>
+        </div>
+        <div class="task-name">WR 교육 체계화</div>
+        <div class="task-tagline">구성원 WR 역량 개발 로드맵</div>
+      </div>
+      <div class="task-card-divider"></div>
+      <div class="task-card-body">
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">WR워크샵 진행을 통한 팀 단위 내재화 활동 진행('26.06 부 진행 중)</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">리더 대상 WR 리더십 심화 과정 운영</div></div>
+        <div class="task-point"><div class="task-dot"></div><div class="task-point-text">연간 WR 교육 이수율 90% 이상 목표</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · CH.7 P4 EMBED</span>
+    <div class="footer-badges"><span class="footer-badge">'26 하반기~</span></div>
+  </div>
+</section>
+
+<!-- ══════════════════════════════════════════
+     OUTRO
+══════════════════════════════════════════ -->
+<section id="outro" class="section">
+  <div class="hero">
+    <div>
+      <div class="hero-phase dark">OUTRO</div>
+      <h2 class="hero-title">KPI 현황 및 <em>향후 계획</em></h2>
+      <p class="hero-sub">현재까지의 실행 성과와 내재화 완성을 위한 다음 단계</p>
+    </div>
+    <div class="hero-meta">
+      <span class="meta-tag">'26.05 기준</span>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">KPI 현황</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="kpi-grid" style="margin-bottom:28px;">
+    <div class="kpi-card">
+      <div class="kpi-label">Winning Rules 인지율</div>
+      <div class="kpi-value">56<span style="font-size:16px;font-weight:600;">%</span></div>
+      <div class="kpi-target">그룹CE 키노트 이후 설문 실시</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:56%;background:var(--green);"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">P1 SEE 과제 적용 건 수</div>
+      <div class="kpi-value">10<span style="font-size:16px;font-weight:600;">건</span></div>
+      <div class="kpi-target">목표 10건 · 전 그룹사 적용 완료(사별 이슈로 미적용 과제有)</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:20%;"></div></div>
+    </div>
+    <div class="kpi-card">
+      <div class="kpi-label">P2 DO 전사 참여율</div>
+      <div class="kpi-value">9~11<span style="font-size:16px;font-weight:600;">주차</span></div>
+      <div class="kpi-target">7개 과제 그룹사 안내 대기</div>
+      <div class="kpi-bar"><div class="kpi-bar-fill" style="width:55%;background:var(--teal);"></div></div>
+    </div>
+  </div>
+
+  <div class="section-label">
+    <span class="section-label-text">향후 중점 추진 계획</span>
+    <div class="section-label-line"></div>
+  </div>
+
+  <div class="task-grid-3" style="margin-bottom:28px;">
+    <div class="wave-card">
+      <div class="wave-step">'26.06</div>
+      <div class="wave-title">P1 과제 현황 취합 및 자산화</div>
+      <div class="wave-desc">6개 그룹사 회신 완료 후 각 과제 적용 현황 취합 및 자산화<br>※ P3 과제, Culture Deck</div>
+    </div>
+    <div class="wave-card">
+      <div class="wave-step">'26.06 ~ 07</div>
+      <div class="wave-title">P2 과제 시행 안내 및 모니터링</div>
+      <div class="wave-desc">P2 7과제 참여율 측정. 저조 과제 원인 분석 후 개선안 적용.<br>P1 과제 후속으로 2차 이벤트 기획.</div>
+    </div>
+    <div class="wave-card">
+      <div class="wave-step">'26.07 ~</div>
+      <div class="wave-title">P3 과제 확정 및 진행, P4 진행(인재경영실)</div>
+      <div class="wave-desc">우수 사례 공모 및 시상 등 진행.<br>평가 제도에 WR 반영 기준 확정 및 '27년 적용 준비.</div>
+    </div>
+  </div>
+
+  <div class="outro-dark">
+    <div class="outro-quote">
+      선포는 <em>시작</em>,<br>내재화가 <em>목적</em>입니다
+    </div>
+    <div class="outro-attr">상상인그룹 Winning Rules 내재화 XFN PJT · 인재경영실</div>
+  </div>
+
+  <div class="page-footer">
+    <span class="footer-text">상상인그룹 XFN PJT · OUTRO</span>
+    <div class="footer-badges">
+      <span class="footer-badge">6개 그룹사</span>
+      <span class="footer-badge">PORTFOLIO '26</span>
+    </div>
+  </div>
+</section>
+
+<script>
+  // Scroll spy for nav active state
+  const sections = document.querySelectorAll('section[id]');
+  const navLinks = document.querySelectorAll('.nav-link');
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        navLinks.forEach(l => l.classList.remove('active'));
+        const active = document.querySelector(`.nav-link[href="#${entry.target.id}"]`);
+        if (active) {
+          active.classList.add('active');
+          active.scrollIntoView({ behavior: 'smooth', block: 'nearest', inline: 'center' });
+        }
+      }
+    });
+  }, { threshold: 0.3 });
+  sections.forEach(s => observer.observe(s));
+</script>
+
+</body>
+</html>
